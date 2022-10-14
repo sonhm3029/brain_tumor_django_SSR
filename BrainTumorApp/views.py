@@ -19,14 +19,14 @@ from torchvision.utils import draw_bounding_boxes
 # from tensorflow.keras.layers import Dense
 # from tensorflow.keras.layers import Input
 # from tensorflow.keras.models import Model
-from tensorflow.keras.preprocessing.image import img_to_array
-from tensorflow.keras.preprocessing.image import load_img
-from tensorflow.keras.models import load_model
+# from tensorflow.keras.preprocessing.image import img_to_array
+# from tensorflow.keras.preprocessing.image import load_img
+# from tensorflow.keras.models import load_model
 
 # import matplotlib.pyplot as plt
 
 
-
+import imutils
 import os
 import cv2
 from PIL import Image
@@ -38,10 +38,10 @@ from django.conf import settings
 from django.template.response import TemplateResponse
 from django.utils.datastructures import MultiValueDictKeyError
 from django.core.files.storage import FileSystemStorage
+from model.inceptionresnetv2 import InceptionResNetV2
 
 
-
-model_predict = inceptionresnetv2(num_classes=1000, pretrained='imagenet')
+model_predict = InceptionResNetV2()
 for param in model_predict.parameters():
     param.requires_grad = False
 
@@ -60,32 +60,10 @@ model_predict.last_linear = nn.Sequential(
 )
 
 model_predict.load_state_dict(torch.load("brain_tumor_inceptionresnetv2.pth", map_location=torch.device('cpu')))
-
-# model_predict = torch.load("brain_tumor_inceptionresnetv1_98_acc_2_8.pth", map_location=torch.device('cpu'))
-
 model_predict.eval()
 
-# # load the VGG16 network, ensuring the head FC layers are left off
-# vgg = VGG16(weights="imagenet", include_top=False,
-# 	input_tensor=Input(shape=(224, 224, 3)))
-# # freeze all VGG layers so they will *not* be updated during the
-# # training process
-# vgg.trainable = False
-# # flatten the max-pooling output of VGG
-# flatten = vgg.output
-# flatten = Flatten()(flatten)
-# # construct a fully-connected layer header to output the predicted
-# # bounding box coordinates
-# bboxHead = Dense(128, activation="relu")(flatten)
-# bboxHead = Dense(64, activation="relu")(bboxHead)
-# bboxHead = Dense(32, activation="relu")(bboxHead)
-# bboxHead = Dense(4, activation="sigmoid")(bboxHead)
-# # construct the model we will fine-tune for bounding box regression
-# model_bbox = Model(inputs=vgg.input, outputs=bboxHead)
-
-model_bbox = load_model('bbox_regression.h5')
-
-import imutils
+# Bounding box model
+# model_bbox = load_model('bbox_regression.h5')
 
 MEAN = [0.23740229, 0.23729787, 0.23700129]
 STD = [0.23173477, 0.23151317, 0.23122775]
@@ -165,33 +143,30 @@ def predictor(request):
                 prediction = "No"
             elif (result == 1):
                 prediction = "Yes"
-                img_test = load_img(path, target_size=(224, 224))
-                img_test = img_to_array(img_test) / 255.0
-                img_test = np.expand_dims(img_test, axis=0)
-                preds = model_bbox.predict(img_test)[0]
-                (startX, startY, endX, endY) = preds
-                # image = cv2.imread(path)
-                # img3 = imutils.resize(imag, width=600)
-                (h, w) = imag.shape[:2]
-                # scale the predicted bounding box coordinates based on the image
-                # dimensions
-                startX = int(startX * w)
-                startY = int(startY * h)
-                endX = int(endX * w)
-                endY = int(endY * h)
+                # img_test = load_img(path, target_size=(224, 224))
+                # img_test = img_to_array(img_test) / 255.0
+                # img_test = np.expand_dims(img_test, axis=0)
+                # preds = model_bbox.predict(img_test)[0]
+                # (startX, startY, endX, endY) = preds
+                # # image = cv2.imread(path)
+                # # img3 = imutils.resize(imag, width=600)
+                # (h, w) = imag.shape[:2]
+                # # scale the predicted bounding box coordinates based on the image
+                # # dimensions
+                # startX = int(startX * w)
+                # startY = int(startY * h)
+                # endX = int(endX * w)
+                # endY = int(endY * h)
 
-                img1 = read_image(path)
+                # img1 = read_image(path)
 
-                boxes = torch.tensor([[startX, startY, endX, endY]], dtype=torch.float)
+                # boxes = torch.tensor([[startX, startY, endX, endY]], dtype=torch.float)
 
-                result1 = draw_bounding_boxes(img1, boxes, width=4)
-                result2 = torch.transpose(result1, 0, 2)
-                result2 = torch.transpose(result2, 0, 1)
-                result2 = result2.numpy()
-                # image = result1
-                cv2.imwrite(path, result2)
-                # _image = fss.save(image.name, image)
-                # image_url = fss.url(_image)
+                # result1 = draw_bounding_boxes(img1, boxes, width=4)
+                # result2 = torch.transpose(result1, 0, 2)
+                # result2 = torch.transpose(result2, 0, 1)
+                # result2 = result2.numpy()
+                # cv2.imwrite(path, result2)
 
             else:
                 prediction = "Unknown"

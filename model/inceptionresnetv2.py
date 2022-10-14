@@ -360,22 +360,22 @@ def inceptionresnetv2(num_classes=1000, pretrained='imagenet'):
     return model
 
 
-'''
-TEST
-Run this code with:
-```
-cd $HOME/pretrained-models.pytorch
-python -m pretrainedmodels.inceptionresnetv2
-```
-'''
-if __name__ == '__main__':
+# '''
+# TEST
+# Run this code with:
+# ```
+# cd $HOME/pretrained-models.pytorch
+# python -m pretrainedmodels.inceptionresnetv2
+# ```
+# '''
+# if __name__ == '__main__':
 
-    assert inceptionresnetv2(num_classes=10, pretrained=None)
-    print('success')
-    assert inceptionresnetv2(num_classes=1000, pretrained='imagenet')
-    print('success')
-    assert inceptionresnetv2(num_classes=1001, pretrained='imagenet+background')
-    print('success')
+#     assert inceptionresnetv2(num_classes=10, pretrained=None)
+#     print('success')
+#     assert inceptionresnetv2(num_classes=1000, pretrained='imagenet')
+#     print('success')
+#     assert inceptionresnetv2(num_classes=1001, pretrained='imagenet+background')
+#     print('success')
 
-    # fail
-    assert inceptionresnetv2(num_classes=1001, pretrained='imagenet')
+#     # fail
+#     assert inceptionresnetv2(num_classes=1001, pretrained='imagenet')
