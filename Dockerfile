@@ -19,9 +19,5 @@ EXPOSE 8000
 
 
 # copy static file
-
-# Disable generate __pycache__ folder
-RUN $env:PYTHONDONTWRITEBYTECODE=1
-
 # run command
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+CMD ["python","-B" ,"manage.py", "runserver", "0.0.0.0:8000"]
