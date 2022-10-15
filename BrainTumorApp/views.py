@@ -19,8 +19,6 @@ from tensorflow.keras.models import load_model
 
 # import matplotlib.pyplot as plt
 
-
-
 import os
 import cv2
 from PIL import Image

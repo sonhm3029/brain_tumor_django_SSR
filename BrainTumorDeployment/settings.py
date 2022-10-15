@@ -28,9 +28,7 @@ DEBUG = False
 
 ALLOWED_HOSTS = ['*', 'localhost', '127.0.0.1']
 
-CSRF_TRUSTED_ORIGINS = ['https://c7b9-2405-4802-374-f230-e0df-cea7-7d5e-b326.ngrok.io']
-
-
+# CSRF_TRUSTED_ORIGINS = ['https://c7b9-2405-4802-374-f230-e0df-cea7-7d5e-b326.ngrok.io']
 # Application definition
 
 INSTALLED_APPS = [
